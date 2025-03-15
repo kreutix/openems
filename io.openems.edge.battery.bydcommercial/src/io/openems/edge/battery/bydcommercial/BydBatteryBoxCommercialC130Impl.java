@@ -16,6 +16,7 @@ import org.osgi.service.event.propertytypes.EventTopics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.openems.common.channel.AccessMode;
 import io.openems.common.channel.Unit;
 import io.openems.common.exceptions.OpenemsError.OpenemsNamedException;
 import io.openems.common.types.OpenemsType;
@@ -41,6 +42,8 @@ import io.openems.edge.common.channel.ChannelId;
 import io.openems.edge.common.channel.value.Value;
 import io.openems.edge.common.type.TypeUtils;
 import io.openems.edge.bridge.modbus.api.element.BitsWordElement;
+import io.openems.edge.common.modbusslave.ModbusSlave;
+import io.openems.edge.common.modbusslave.ModbusSlaveTable;
 
 import static io.openems.edge.bridge.modbus.api.ElementToChannelConverter.DIRECT_1_TO_1;
 
@@ -51,11 +54,12 @@ import static io.openems.edge.bridge.modbus.api.ElementToChannelConverter.DIRECT
     configurationPolicy = ConfigurationPolicy.REQUIRE
 )
 @EventTopics({
-    EdgeEventConstants.TOPIC_CYCLE_AFTER_PROCESS_IMAGE, //
+    EdgeEventConstants.TOPIC_CYCLE_BEFORE_PROCESS_IMAGE, //
     EdgeEventConstants.TOPIC_CYCLE_AFTER_PROCESS_IMAGE //
 })
 public class BydBatteryBoxCommercialC130Impl extends AbstractOpenemsModbusComponent
-        implements BydBatteryBoxCommercialC130, Battery, ModbusComponent, OpenemsComponent, EventHandler {
+        implements BydBatteryBoxCommercialC130, Battery, ModbusComponent, OpenemsComponent, EventHandler, ModbusSlave,
+		StartStoppable {
 
     private static final int CLUSTER_BASE = 0x1100; // Cluster status
     private static final int CELL_BASE = 0x2000;    // Cell data base
@@ -114,16 +118,16 @@ public class BydBatteryBoxCommercialC130Impl extends AbstractOpenemsModbusCompon
                 ElementToChannelConverter.SCALE_FACTOR_1),
             m(BydBatteryBoxCommercialC130.ChannelId.TOTAL_SOC, new UnsignedWordElement(CLUSTER_BASE + 7), DIRECT_1_TO_1),
             m(BydBatteryBoxCommercialC130.ChannelId.TOTAL_SOH, new UnsignedWordElement(CLUSTER_BASE + 8), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MAX_CELL_TEMPERATURE, new UnsignedWordElement(CLUSTER_BASE + 9), DIRECT_1_TO_1),
+            m(Battery.ChannelId.MAX_CELL_TEMPERATURE, new UnsignedWordElement(CLUSTER_BASE + 9), DIRECT_1_TO_1),
             m(BydBatteryBoxCommercialC130.ChannelId.MAX_TEMP_MODULE, new UnsignedWordElement(CLUSTER_BASE + 10), DIRECT_1_TO_1),
             m(BydBatteryBoxCommercialC130.ChannelId.MAX_TEMP_IN_MODULE, new UnsignedWordElement(CLUSTER_BASE + 11), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MIN_CELL_TEMPERATURE, new UnsignedWordElement(CLUSTER_BASE + 12), DIRECT_1_TO_1),
+            m(Battery.ChannelId.MIN_CELL_TEMPERATURE, new UnsignedWordElement(CLUSTER_BASE + 12), DIRECT_1_TO_1),
             m(BydBatteryBoxCommercialC130.ChannelId.MIN_TEMP_MODULE, new UnsignedWordElement(CLUSTER_BASE + 13), DIRECT_1_TO_1),
             m(BydBatteryBoxCommercialC130.ChannelId.MIN_TEMP_IN_MODULE, new UnsignedWordElement(CLUSTER_BASE + 14), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MAX_CELL_VOLTAGE, new UnsignedWordElement(CLUSTER_BASE + 15), DIRECT_1_TO_1),
+            m(Battery.ChannelId.MAX_CELL_VOLTAGE, new UnsignedWordElement(CLUSTER_BASE + 15), DIRECT_1_TO_1),
             m(BydBatteryBoxCommercialC130.ChannelId.MAX_CELL_VOLT_MODULE, new UnsignedWordElement(CLUSTER_BASE + 16), DIRECT_1_TO_1),
             m(BydBatteryBoxCommercialC130.ChannelId.MAX_CELL_VOLT_CELL_NUM, new UnsignedWordElement(CLUSTER_BASE + 17), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MIN_CELL_VOLTAGE, new UnsignedWordElement(CLUSTER_BASE + 18), DIRECT_1_TO_1),
+            m(Battery.ChannelId.MIN_CELL_VOLTAGE, new UnsignedWordElement(CLUSTER_BASE + 18), DIRECT_1_TO_1),
             m(BydBatteryBoxCommercialC130.ChannelId.MIN_CELL_VOLT_MODULE, new UnsignedWordElement(CLUSTER_BASE + 19), DIRECT_1_TO_1),
             m(BydBatteryBoxCommercialC130.ChannelId.MIN_CELL_VOLT_CELL_NUM, new UnsignedWordElement(CLUSTER_BASE + 20), DIRECT_1_TO_1),
             // Warning and Protection Events
@@ -314,10 +318,10 @@ public class BydBatteryBoxCommercialC130Impl extends AbstractOpenemsModbusCompon
         // this.getCurrentChannel().setNextValue(Value.of(Integer.class, this.channel(BydBatteryBoxCommercialC130.ChannelId.TOTAL_CURRENT).value().orElse(0)));
         // this.getSocChannel().setNextValue(Value.of(Integer.class, this.channel(BydBatteryBoxCommercialC130.ChannelId.TOTAL_SOC).value().orElse(0)));
         // this.getSohChannel().setNextValue(Value.of(Integer.class, this.channel(BydBatteryBoxCommercialC130.ChannelId.TOTAL_SOH).value().orElse(0)));
-        // this.getMaxCellVoltageChannel().setNextValue(Value.of(Integer.class, this.channel(BydBatteryBoxCommercialC130.ChannelId.MAX_CELL_VOLTAGE).value().orElse(0)));
-        // this.getMinCellVoltageChannel().setNextValue(Value.of(Integer.class, this.channel(BydBatteryBoxCommercialC130.ChannelId.MIN_CELL_VOLTAGE).value().orElse(0)));
-        // this.getMaxCellTemperatureChannel().setNextValue(Value.of(Integer.class, this.channel(BydBatteryBoxCommercialC130.ChannelId.MAX_CELL_TEMPERATURE).value().orElse(0)));
-        // this.getMinCellTemperatureChannel().setNextValue(Value.of(Integer.class, this.channel(BydBatteryBoxCommercialC130.ChannelId.MIN_CELL_TEMPERATURE).value().orElse(0)));
+        // this.getMaxCellVoltageChannel().setNextValue(Value.of(Integer.class, this.channel(Battery.ChannelId.MAX_CELL_VOLTAGE).value().orElse(0)));
+        // this.getMinCellVoltageChannel().setNextValue(Value.of(Integer.class, this.channel(Battery.ChannelId.MIN_CELL_VOLTAGE).value().orElse(0)));
+        // this.getMaxCellTemperatureChannel().setNextValue(Value.of(Integer.class, this.channel(Battery.ChannelId.MAX_CELL_TEMPERATURE).value().orElse(0)));
+        // this.getMinCellTemperatureChannel().setNextValue(Value.of(Integer.class, this.channel(Battery.ChannelId.MIN_CELL_TEMPERATURE).value().orElse(0)));
     }
 
     @Override

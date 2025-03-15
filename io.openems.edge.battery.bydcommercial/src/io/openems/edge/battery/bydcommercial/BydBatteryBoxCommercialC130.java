@@ -19,14 +19,7 @@ public interface BydBatteryBoxCommercialC130 extends Battery, OpenemsComponent {
                 .unit(Unit.PERCENT)), //
         TOTAL_SOH(Doc.of(OpenemsType.INTEGER) //
                 .unit(Unit.PERCENT)), //
-        MAX_CELL_VOLTAGE(Doc.of(OpenemsType.INTEGER) //
-                .unit(Unit.MILLIVOLT)), //
-        MIN_CELL_VOLTAGE(Doc.of(OpenemsType.INTEGER) //
-                .unit(Unit.MILLIVOLT)), //
-        MAX_CELL_TEMPERATURE(Doc.of(OpenemsType.INTEGER) //
-                .unit(Unit.DEZIDEGREE_CELSIUS)), //
-        MIN_CELL_TEMPERATURE(Doc.of(OpenemsType.INTEGER) //
-                .unit(Unit.DEZIDEGREE_CELSIUS)), //
+        // Note: MAX_CELL_VOLTAGE, MIN_CELL_VOLTAGE, MAX_CELL_TEMPERATURE, and MIN_CELL_TEMPERATURE are inherited from Battery interface
         CHARGE_DISCHARGE_STATE(Doc.of(OpenemsType.INTEGER) //
                 .text("Charge/Discharge State (0x0011=Charge, 0x0022=Discharge, 0x0033=Idle)")), //
         MODULE_QTY(Doc.of(OpenemsType.INTEGER) //
