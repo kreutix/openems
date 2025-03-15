@@ -36,5 +36,7 @@ public @interface Config {
     @AttributeDefinition(name = "Number of Modules", description = "Number of battery modules (1-32)", min = "1", max = "32")
     int numberOfModules() default 1;
 
+    String Modbus_target() default "";
+
     String webconsole_configurationFactory_nameHint() default "Battery BYD Battery-Box Commercial C130 [{id}]";
 }

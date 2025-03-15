@@ -12,7 +12,12 @@ public class MyConfig extends AbstractComponentConfig implements Config {
 		private String modbusId;
 		private int modbusUnitId;
 		private StartStopConfig startStop;
-		private int numberOfSlaves;
+		private int numberOfModules;
+		private boolean isSbms;
+		private String host;
+		private int port;
+		private String alias;
+		private boolean enabled;
 
 		private Builder() {
 		}
@@ -32,8 +37,33 @@ public class MyConfig extends AbstractComponentConfig implements Config {
 			return this;
 		}
 
-		public Builder setNumberOfSlaves(int numberOfSlaves) {
-			this.numberOfSlaves = numberOfSlaves;
+		public Builder setNumberOfModules(int numberOfModules) {
+			this.numberOfModules = numberOfModules;
+			return this;
+		}
+
+		public Builder setIsSbms(boolean isSbms) {
+			this.isSbms = isSbms;
+			return this;
+		}
+
+		public Builder setHost(String host) {
+			this.host = host;
+			return this;
+		}
+
+		public Builder setPort(int port) {
+			this.port = port;
+			return this;
+		}
+
+		public Builder setAlias(String alias) {
+			this.alias = alias;
+			return this;
+		}
+
+		public Builder setEnabled(boolean enabled) {
+			this.enabled = enabled;
 			return this;
 		}
 
@@ -79,8 +109,33 @@ public class MyConfig extends AbstractComponentConfig implements Config {
 	}
 
 	@Override
-	public int numberOfSlaves() {
-		return this.builder.numberOfSlaves;
+	public int numberOfModules() {
+		return this.builder.numberOfModules;
+	}
+
+	@Override
+	public boolean isSbms() {
+		return this.builder.isSbms;
+	}
+
+	@Override
+	public String host() {
+		return this.builder.host;
+	}
+
+	@Override
+	public int port() {
+		return this.builder.port;
+	}
+
+	@Override
+	public String alias() {
+		return this.builder.alias;
+	}
+
+	@Override
+	public boolean enabled() {
+		return this.builder.enabled;
 	}
 
 }
