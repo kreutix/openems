@@ -14,8 +14,6 @@ public class MyConfig extends AbstractComponentConfig implements Config {
 		private StartStopConfig startStop;
 		private int numberOfModules;
 		private boolean isSbms;
-		private String host;
-		private int port;
 		private String alias;
 		private boolean enabled;
 
@@ -44,16 +42,6 @@ public class MyConfig extends AbstractComponentConfig implements Config {
 
 		public Builder setIsSbms(boolean isSbms) {
 			this.isSbms = isSbms;
-			return this;
-		}
-
-		public Builder setHost(String host) {
-			this.host = host;
-			return this;
-		}
-
-		public Builder setPort(int port) {
-			this.port = port;
 			return this;
 		}
 
@@ -116,16 +104,6 @@ public class MyConfig extends AbstractComponentConfig implements Config {
 	@Override
 	public boolean isSbms() {
 		return this.builder.isSbms;
-	}
-
-	@Override
-	public String host() {
-		return this.builder.host;
-	}
-
-	@Override
-	public int port() {
-		return this.builder.port;
 	}
 
 	@Override
