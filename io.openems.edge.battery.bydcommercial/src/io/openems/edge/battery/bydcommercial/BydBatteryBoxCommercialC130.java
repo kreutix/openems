@@ -258,8 +258,8 @@ public interface BydBatteryBoxCommercialC130 extends Battery, OpenemsComponent {
         FIRMWARE_VERSION(Doc.of(OpenemsType.STRING)), //
         HARDWARE_VERSION(Doc.of(OpenemsType.STRING)), //
         FIRMWARE_COMPILE_TIME(Doc.of(OpenemsType.STRING)), //
-
-        // Dynamic Per-Module Cell Data (example for Module 1; repeated up to 32)
+		
+		// Dynamic Per-Module Cell Data (example for Module 1; repeated up to 32)
 		MODULE_1_CELL_VOLTAGE_1(Doc.of(OpenemsType.INTEGER) //
 				.unit(Unit.MILLIVOLT)), //
 		MODULE_1_CELL_VOLTAGE_2(Doc.of(OpenemsType.INTEGER) //
