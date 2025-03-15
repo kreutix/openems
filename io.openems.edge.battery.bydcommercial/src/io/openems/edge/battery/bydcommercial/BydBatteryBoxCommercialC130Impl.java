@@ -108,99 +108,15 @@ public class BydBatteryBoxCommercialC130Impl extends AbstractOpenemsModbusCompon
     protected ModbusProtocol defineModbusProtocol() {
         ModbusProtocol protocol = new ModbusProtocol(this);
 
-        // Cluster Status (0x1100, 45 registers)
+        // Cluster Status (0x1100-0x1102)
         protocol.addTask(new FC3ReadRegistersTask(CLUSTER_BASE, Priority.HIGH,
             m(BydBatteryBoxCommercialC130.ChannelId.TOTAL_VOLTAGE, new UnsignedWordElement(CLUSTER_BASE), 
                 ElementToChannelConverter.SCALE_FACTOR_1),
             m(BydBatteryBoxCommercialC130.ChannelId.CHARGE_DISCHARGE_STATE, new UnsignedWordElement(CLUSTER_BASE + 1), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.BMS_SELFTEST_STATUS, new UnsignedWordElement(CLUSTER_BASE + 2), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.TOTAL_CURRENT, new SignedWordElement(CLUSTER_BASE + 5), 
-                ElementToChannelConverter.SCALE_FACTOR_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.TOTAL_SOC, new UnsignedWordElement(CLUSTER_BASE + 7), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.TOTAL_SOH, new UnsignedWordElement(CLUSTER_BASE + 8), DIRECT_1_TO_1),
-            m(Battery.ChannelId.MAX_CELL_TEMPERATURE, new UnsignedWordElement(CLUSTER_BASE + 9), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MAX_TEMP_MODULE, new UnsignedWordElement(CLUSTER_BASE + 10), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MAX_TEMP_IN_MODULE, new UnsignedWordElement(CLUSTER_BASE + 11), DIRECT_1_TO_1),
-            m(Battery.ChannelId.MIN_CELL_TEMPERATURE, new UnsignedWordElement(CLUSTER_BASE + 12), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MIN_TEMP_MODULE, new UnsignedWordElement(CLUSTER_BASE + 13), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MIN_TEMP_IN_MODULE, new UnsignedWordElement(CLUSTER_BASE + 14), DIRECT_1_TO_1),
-            m(Battery.ChannelId.MAX_CELL_VOLTAGE, new UnsignedWordElement(CLUSTER_BASE + 15), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MAX_CELL_VOLT_MODULE, new UnsignedWordElement(CLUSTER_BASE + 16), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MAX_CELL_VOLT_CELL_NUM, new UnsignedWordElement(CLUSTER_BASE + 17), DIRECT_1_TO_1),
-            m(Battery.ChannelId.MIN_CELL_VOLTAGE, new UnsignedWordElement(CLUSTER_BASE + 18), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MIN_CELL_VOLT_MODULE, new UnsignedWordElement(CLUSTER_BASE + 19), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.MIN_CELL_VOLT_CELL_NUM, new UnsignedWordElement(CLUSTER_BASE + 20), DIRECT_1_TO_1),
-            // Warning and Protection Events
-            m(new BitsWordElement(CLUSTER_BASE + 22, this) //
-                .bit(0, BydBatteryBoxCommercialC130.ChannelId.WARN_WHOLE_SET_OVERVOLTAGE) //
-                .bit(1, BydBatteryBoxCommercialC130.ChannelId.WARN_WHOLE_SET_UNDERVOLTAGE) //
-                .bit(2, BydBatteryBoxCommercialC130.ChannelId.WARN_CHARGING_OVERCURRENT) //
-                .bit(3, BydBatteryBoxCommercialC130.ChannelId.WARN_DISCHARGING_OVERCURRENT) //
-                .bit(4, BydBatteryBoxCommercialC130.ChannelId.WARN_CHARGING_HIGH_TEMP) //
-                .bit(5, BydBatteryBoxCommercialC130.ChannelId.WARN_CHARGING_LOW_TEMP) //
-                .bit(6, BydBatteryBoxCommercialC130.ChannelId.WARN_BMU_COMM_FAILURE) //
-                .bit(7, BydBatteryBoxCommercialC130.ChannelId.WARN_TEMP_IMBALANCE) //
-                .bit(8, BydBatteryBoxCommercialC130.ChannelId.WARN_CELL_VOLTAGE_IMBALANCE) //
-                .bit(9, BydBatteryBoxCommercialC130.ChannelId.WARN_SOC_TOO_LOW) //
-                .bit(10, BydBatteryBoxCommercialC130.ChannelId.WARN_LOW_INSULATION) //
-                .bit(11, BydBatteryBoxCommercialC130.ChannelId.WARN_CELL_OVERVOLTAGE) //
-                .bit(12, BydBatteryBoxCommercialC130.ChannelId.WARN_CELL_UNDERVOLTAGE) //
-                .bit(13, BydBatteryBoxCommercialC130.ChannelId.WARN_DISCHARGE_HIGH_TEMP) //
-                .bit(14, BydBatteryBoxCommercialC130.ChannelId.WARN_DISCHARGE_LOW_TEMP) //
-            ),
-            // Primary protections
-            m(new BitsWordElement(CLUSTER_BASE + 23, this) //
-                .bit(0, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_WHOLE_SET_OVERVOLTAGE) //
-                .bit(1, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_WHOLE_SET_UNDERVOLTAGE) //
-                .bit(2, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CHARGE_OVERCURRENT) //
-                .bit(3, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_DISCHARGE_OVERCURRENT) //
-                .bit(4, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CHARGE_HIGH_TEMP) //
-                .bit(5, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CHARGE_LOW_TEMP) //
-                .bit(6, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_BMU_COMM_FAILURE) //
-                .bit(7, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_TEMP_IMBALANCE) //
-                .bit(8, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_LOW_INSULATION) //
-                .bit(9, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CELL_IMBALANCE) //
-                .bit(10, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_SOC_TOO_LOW) //
-                .bit(11, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CELL_OVERVOLTAGE) //
-                .bit(12, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CELL_UNDERVOLTAGE) //
-                .bit(13, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_DISCHARGE_HIGH_TEMP) //
-                .bit(14, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_DISCHARGE_LOW_TEMP) //
-            ),
-            // Secondary protections
-            m(new BitsWordElement(CLUSTER_BASE + 24, this) //
-                .bit(0, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_WHOLE_SET_OVERVOLTAGE) //
-                .bit(1, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_WHOLE_SET_UNDERVOLTAGE) //
-                .bit(2, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CHARGE_OVERCURRENT) //
-                .bit(3, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_DISCHARGE_OVERCURRENT) //
-                .bit(4, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CHARGE_HIGH_TEMP) //
-                .bit(5, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CHARGE_LOW_TEMP) //
-                .bit(6, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_MODULE_FAULT) //
-                .bit(7, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_EXTERNAL_PROTECTION) //
-                .bit(8, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_TEMP_IMBALANCE) //
-                .bit(9, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_LOW_INSULATION) //
-                .bit(10, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CELL_IMBALANCE) //
-                .bit(11, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_SYSTEM_TEMP_HIGH) //
-                .bit(12, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CELL_OVERVOLTAGE) //
-                .bit(13, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CELL_UNDERVOLTAGE) //
-                .bit(14, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_DISCHARGE_HIGH_TEMP) //
-                .bit(15, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_DISCHARGE_LOW_TEMP) //
-            ),
-            m(BydBatteryBoxCommercialC130.ChannelId.NEG_HALF_CLUSTER_CURRENT, new SignedWordElement(CLUSTER_BASE + 33), 
-                ElementToChannelConverter.SCALE_FACTOR_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.CYCLE_COUNT, new UnsignedWordElement(CLUSTER_BASE + 34), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.ACC_CHG_AH, new UnsignedWordElement(CLUSTER_BASE + 35), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.ACC_DISCHG_AH, new UnsignedWordElement(CLUSTER_BASE + 36), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.CURRENT_MAX_CHG_POWER, new UnsignedWordElement(CLUSTER_BASE + 37), 
-                ElementToChannelConverter.SCALE_FACTOR_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.CURRENT_MAX_DISCHG_POWER, new UnsignedWordElement(CLUSTER_BASE + 38), 
-                ElementToChannelConverter.SCALE_FACTOR_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.ACC_CHG_KWH, new UnsignedWordElement(CLUSTER_BASE + 39), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.ACC_DISCHG_KWH, new UnsignedWordElement(CLUSTER_BASE + 40), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.CURRENT_CHGABLE_KWH, new UnsignedWordElement(CLUSTER_BASE + 43), DIRECT_1_TO_1),
-            m(BydBatteryBoxCommercialC130.ChannelId.CURRENT_DISCHGABLE_KWH, new UnsignedWordElement(CLUSTER_BASE + 44), DIRECT_1_TO_1)
+            m(BydBatteryBoxCommercialC130.ChannelId.BMS_SELFTEST_STATUS, new UnsignedWordElement(CLUSTER_BASE + 2), DIRECT_1_TO_1)
         ));
 
-        // BMU Status
+        // BMU Status (0x1103-0x1104)
         protocol.addTask(new FC3ReadRegistersTask(CLUSTER_BASE + 3, Priority.LOW,
             m(new BitsWordElement(CLUSTER_BASE + 3, this) //
                 .bit(0, BydBatteryBoxCommercialC130.ChannelId.BMU1_WORK_STATUS) //
@@ -238,6 +154,115 @@ public class BydBatteryBoxCommercialC130Impl extends AbstractOpenemsModbusCompon
                 .bit(14, BydBatteryBoxCommercialC130.ChannelId.BMU31_WORK_STATUS) //
                 .bit(15, BydBatteryBoxCommercialC130.ChannelId.BMU32_WORK_STATUS) //
             )
+        ));
+
+        // Current (0x1105)
+        protocol.addTask(new FC3ReadRegistersTask(CLUSTER_BASE + 5, Priority.HIGH,
+            m(BydBatteryBoxCommercialC130.ChannelId.TOTAL_CURRENT, new SignedWordElement(CLUSTER_BASE + 5), 
+                ElementToChannelConverter.SCALE_FACTOR_1)
+        ));
+
+        // SOC and SOH (0x1107-0x1108)
+        protocol.addTask(new FC3ReadRegistersTask(CLUSTER_BASE + 7, Priority.HIGH,
+            m(BydBatteryBoxCommercialC130.ChannelId.TOTAL_SOC, new UnsignedWordElement(CLUSTER_BASE + 7), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.TOTAL_SOH, new UnsignedWordElement(CLUSTER_BASE + 8), DIRECT_1_TO_1)
+        ));
+
+        // Temperature and Cell Voltage Data (0x1109-0x1114)
+        protocol.addTask(new FC3ReadRegistersTask(CLUSTER_BASE + 9, Priority.HIGH,
+            m(Battery.ChannelId.MAX_CELL_TEMPERATURE, new UnsignedWordElement(CLUSTER_BASE + 9), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.MAX_TEMP_MODULE, new UnsignedWordElement(CLUSTER_BASE + 10), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.MAX_TEMP_IN_MODULE, new UnsignedWordElement(CLUSTER_BASE + 11), DIRECT_1_TO_1),
+            m(Battery.ChannelId.MIN_CELL_TEMPERATURE, new UnsignedWordElement(CLUSTER_BASE + 12), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.MIN_TEMP_MODULE, new UnsignedWordElement(CLUSTER_BASE + 13), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.MIN_TEMP_IN_MODULE, new UnsignedWordElement(CLUSTER_BASE + 14), DIRECT_1_TO_1)
+        ));
+
+        // Cell Voltage Data (0x1115-0x1120)
+        protocol.addTask(new FC3ReadRegistersTask(CLUSTER_BASE + 15, Priority.HIGH,
+            m(Battery.ChannelId.MAX_CELL_VOLTAGE, new UnsignedWordElement(CLUSTER_BASE + 15), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.MAX_CELL_VOLT_MODULE, new UnsignedWordElement(CLUSTER_BASE + 16), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.MAX_CELL_VOLT_CELL_NUM, new UnsignedWordElement(CLUSTER_BASE + 17), DIRECT_1_TO_1),
+            m(Battery.ChannelId.MIN_CELL_VOLTAGE, new UnsignedWordElement(CLUSTER_BASE + 18), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.MIN_CELL_VOLT_MODULE, new UnsignedWordElement(CLUSTER_BASE + 19), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.MIN_CELL_VOLT_CELL_NUM, new UnsignedWordElement(CLUSTER_BASE + 20), DIRECT_1_TO_1)
+        ));
+
+        // Warning and Protection Events (0x1116-0x1118)
+        protocol.addTask(new FC3ReadRegistersTask(CLUSTER_BASE + 22, Priority.HIGH,
+            m(new BitsWordElement(CLUSTER_BASE + 22, this) //
+                .bit(0, BydBatteryBoxCommercialC130.ChannelId.WARN_WHOLE_SET_OVERVOLTAGE) //
+                .bit(1, BydBatteryBoxCommercialC130.ChannelId.WARN_WHOLE_SET_UNDERVOLTAGE) //
+                .bit(2, BydBatteryBoxCommercialC130.ChannelId.WARN_CHARGING_OVERCURRENT) //
+                .bit(3, BydBatteryBoxCommercialC130.ChannelId.WARN_DISCHARGING_OVERCURRENT) //
+                .bit(4, BydBatteryBoxCommercialC130.ChannelId.WARN_CHARGING_HIGH_TEMP) //
+                .bit(5, BydBatteryBoxCommercialC130.ChannelId.WARN_CHARGING_LOW_TEMP) //
+                .bit(6, BydBatteryBoxCommercialC130.ChannelId.WARN_BMU_COMM_FAILURE) //
+                .bit(7, BydBatteryBoxCommercialC130.ChannelId.WARN_TEMP_IMBALANCE) //
+                .bit(8, BydBatteryBoxCommercialC130.ChannelId.WARN_CELL_VOLTAGE_IMBALANCE) //
+                .bit(9, BydBatteryBoxCommercialC130.ChannelId.WARN_SOC_TOO_LOW) //
+                .bit(10, BydBatteryBoxCommercialC130.ChannelId.WARN_LOW_INSULATION) //
+                .bit(11, BydBatteryBoxCommercialC130.ChannelId.WARN_CELL_OVERVOLTAGE) //
+                .bit(12, BydBatteryBoxCommercialC130.ChannelId.WARN_CELL_UNDERVOLTAGE) //
+                .bit(13, BydBatteryBoxCommercialC130.ChannelId.WARN_DISCHARGE_HIGH_TEMP) //
+                .bit(14, BydBatteryBoxCommercialC130.ChannelId.WARN_DISCHARGE_LOW_TEMP) //
+            ),
+            m(new BitsWordElement(CLUSTER_BASE + 23, this) //
+                .bit(0, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_WHOLE_SET_OVERVOLTAGE) //
+                .bit(1, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_WHOLE_SET_UNDERVOLTAGE) //
+                .bit(2, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CHARGE_OVERCURRENT) //
+                .bit(3, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_DISCHARGE_OVERCURRENT) //
+                .bit(4, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CHARGE_HIGH_TEMP) //
+                .bit(5, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CHARGE_LOW_TEMP) //
+                .bit(6, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_BMU_COMM_FAILURE) //
+                .bit(7, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_TEMP_IMBALANCE) //
+                .bit(8, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_LOW_INSULATION) //
+                .bit(9, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CELL_IMBALANCE) //
+                .bit(10, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_SOC_TOO_LOW) //
+                .bit(11, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CELL_OVERVOLTAGE) //
+                .bit(12, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_CELL_UNDERVOLTAGE) //
+                .bit(13, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_DISCHARGE_HIGH_TEMP) //
+                .bit(14, BydBatteryBoxCommercialC130.ChannelId.PRIMARY_DISCHARGE_LOW_TEMP) //
+            ),
+            m(new BitsWordElement(CLUSTER_BASE + 24, this) //
+                .bit(0, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_WHOLE_SET_OVERVOLTAGE) //
+                .bit(1, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_WHOLE_SET_UNDERVOLTAGE) //
+                .bit(2, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CHARGE_OVERCURRENT) //
+                .bit(3, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_DISCHARGE_OVERCURRENT) //
+                .bit(4, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CHARGE_HIGH_TEMP) //
+                .bit(5, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CHARGE_LOW_TEMP) //
+                .bit(6, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_MODULE_FAULT) //
+                .bit(7, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_EXTERNAL_PROTECTION) //
+                .bit(8, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_TEMP_IMBALANCE) //
+                .bit(9, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_LOW_INSULATION) //
+                .bit(10, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CELL_IMBALANCE) //
+                .bit(11, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_SYSTEM_TEMP_HIGH) //
+                .bit(12, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CELL_OVERVOLTAGE) //
+                .bit(13, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_CELL_UNDERVOLTAGE) //
+                .bit(14, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_DISCHARGE_HIGH_TEMP) //
+                .bit(15, BydBatteryBoxCommercialC130.ChannelId.SECONDARY_DISCHARGE_LOW_TEMP) //
+            )
+        ));
+
+        // Additional Status Data - Part 1 (0x1121-0x1128)
+        protocol.addTask(new FC3ReadRegistersTask(CLUSTER_BASE + 33, Priority.HIGH,
+            m(BydBatteryBoxCommercialC130.ChannelId.NEG_HALF_CLUSTER_CURRENT, new SignedWordElement(CLUSTER_BASE + 33), 
+                ElementToChannelConverter.SCALE_FACTOR_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.CYCLE_COUNT, new UnsignedWordElement(CLUSTER_BASE + 34), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.ACC_CHG_AH, new UnsignedWordElement(CLUSTER_BASE + 35), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.ACC_DISCHG_AH, new UnsignedWordElement(CLUSTER_BASE + 36), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.CURRENT_MAX_CHG_POWER, new UnsignedWordElement(CLUSTER_BASE + 37), 
+                ElementToChannelConverter.SCALE_FACTOR_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.CURRENT_MAX_DISCHG_POWER, new UnsignedWordElement(CLUSTER_BASE + 38), 
+                ElementToChannelConverter.SCALE_FACTOR_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.ACC_CHG_KWH, new UnsignedWordElement(CLUSTER_BASE + 39), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.ACC_DISCHG_KWH, new UnsignedWordElement(CLUSTER_BASE + 40), DIRECT_1_TO_1)
+        ));
+
+        // Additional Status Data - Part 2 (0x112B-0x112C)
+        protocol.addTask(new FC3ReadRegistersTask(CLUSTER_BASE + 43, Priority.HIGH,
+            m(BydBatteryBoxCommercialC130.ChannelId.CURRENT_CHGABLE_KWH, new UnsignedWordElement(CLUSTER_BASE + 43), DIRECT_1_TO_1),
+            m(BydBatteryBoxCommercialC130.ChannelId.CURRENT_DISCHGABLE_KWH, new UnsignedWordElement(CLUSTER_BASE + 44), DIRECT_1_TO_1)
         ));
 
         // Per-Module Cell Data
